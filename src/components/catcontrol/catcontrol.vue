@@ -6,9 +6,8 @@
     <div class="cat-count" v-show="food.count>0">
       {{food.count}}
     </div>
-    <div class="cat-add icon-add_circle" @click="addCat">
+    <div class="cat-add icon-add_circle" @click="addCat"></div>
 
-    </div>
   </div>
 </template>
 
@@ -25,12 +24,13 @@
         if (!event._constructed) {
           return;
         }
-        console.log('click');
+//        console.log('click');
         if (!this.food.count) {
           Vue.set(this.food, 'count', 1);
         } else {
           this.food.count++;
         }
+        this.$dispatch('cart.add', event.target);
       },
       decreaseCat(event) {
         if (!event._constructed) {
@@ -55,7 +55,7 @@
       transition: all 0.4s linear
       &.move-transition
         opacity: 1
-        transform: translate3D(0, 0, 0)
+        transform: translate3d(0, 0, 0)
         .inner
           display inline-block
           font-size 24px
@@ -65,7 +65,7 @@
           transform: rotate(0)
       &.move-enter, &.move-leave
         opacity 0
-        transform: translate3D(24px, 0, 0)
+        transform: translate3d(24px, 0, 0)
         .inner
           transform: rotate(180deg)
     .cat-count

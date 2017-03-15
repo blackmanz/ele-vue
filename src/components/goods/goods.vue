@@ -37,7 +37,7 @@
         </li>
       </ul>
     </div>
-    <shortcat :select-foods="selectFoods" :delivery-price="seller.deliveryPrice"
+    <shortcat v-ref:shortcat :select-foods="selectFoods" :delivery-price="seller.deliveryPrice"
               :min-price="seller.minPrice"></shortcat>
   </div>
 </template>
@@ -55,7 +55,7 @@
     data() {
       return {
         goods: {
-            type: Object
+          type: Object
         },
         listHeight: [],
         scrollY: 0
@@ -128,11 +128,21 @@
         let foodList = this.$els.foodWrapper.getElementsByClassName('food-list-hook');
         let el = foodList[index];
         this.foodScroll.scrollToElement(el, 300);
+      },
+      _drop(target) {
+        this.$nextTick(() => {
+          this.$refs.shortcat.drop(target);
+        });
       }
     },
     components: {
       shortcat,
       catcontrol
+    },
+    events: {
+      'cart.add'(target) {
+        this._drop(target);
+      }
     }
   };
 </script>
