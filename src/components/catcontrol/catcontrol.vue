@@ -1,12 +1,12 @@
 <template>
   <div class="catcontrol">
-    <div class="cat-decrease" v-show="food.count>0" @click="decreaseCat" transition="move">
+    <div class="cat-decrease" v-show="food.count>0" @click.stop.prevent="decreaseCat" transition="move">
       <span class="inner icon-remove_circle_outline"></span>
     </div>
     <div class="cat-count" v-show="food.count>0">
       {{food.count}}
     </div>
-    <div class="cat-add icon-add_circle" @click="addCat"></div>
+    <div class="cat-add icon-add_circle" @click.stop.prevent="addCat"></div>
 
   </div>
 </template>

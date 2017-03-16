@@ -15,21 +15,21 @@
         <li class="food-list food-list-hook" v-for="item in goods">
           <h1 class="title">{{item.name}}</h1>
           <ul>
-            <li class="food-item border-1px" v-for="k in item.foods">
+            <li @click="selectFood(food,$event)" class="food-item border-1px" v-for="food in item.foods">
               <div class="goods_pic">
-                <img widht="57" height="57" :src="k.icon" alt="">
+                <img widht="57" height="57" :src="food.icon" alt="">
               </div>
               <div class="content">
-                <h2 class="name">{{k.name}}</h2>
-                <p class="desc">{{k.description}}</p>
+                <h2 class="name">{{food.name}}</h2>
+                <p class="desc">{{food.description}}</p>
                 <div class="extre">
-                  <span class="count">月售{{k.sellCount}}份</span><span>好评率{{k.rating}}%</span>
+                  <span class="count">月售{{food.sellCount}}份</span><span>好评率{{food.rating}}%</span>
                 </div>
                 <div class="price">
-                  <span class="new">￥{{k.price}}</span><span class="old" v-show="k.oldPrice">￥{{k.oldPrice}}</span>
+                  <span class="new">￥{{food.price}}</span><span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
                 </div>
                 <div class="catcontrol-wrapper">
-                  <catcontrol :food="k"></catcontrol>
+                  <catcontrol :food="food"></catcontrol>
                 </div>
               </div>
             </li>
@@ -40,12 +40,14 @@
     <shortcat v-ref:shortcat :select-foods="selectFoods" :delivery-price="seller.deliveryPrice"
               :min-price="seller.minPrice"></shortcat>
   </div>
+  <food :food="selectedFood" v-ref:food></food>
 </template>
 
 <script type="text/ecmascript-6">
   import BScroll from 'better-scroll';
   import shortcat from '../shortcat/shortcat.vue';
   import catcontrol from '../catcontrol/catcontrol.vue';
+  import food from 'components/food/food.vue';
   const ERR_OK = 0;
 
   export default {
@@ -58,7 +60,8 @@
           type: Object
         },
         listHeight: [],
-        scrollY: 0
+        scrollY: 0,
+        selectedFood: {}
       };
     },
     computed: {
@@ -111,6 +114,13 @@
           this.scrollY = Math.abs(Math.round(pos.y));
         });
       },
+      selectFood(food, event) {
+        if (!event._constructed) {
+            return;
+        }
+        this.selectedFood = food;
+        this.$refs.food.show();
+      },
       _calculateHeight() {
         let foodList = this.$els.foodWrapper.getElementsByClassName('food-list-hook');
         let height = 0;
@@ -137,7 +147,8 @@
     },
     components: {
       shortcat,
-      catcontrol
+      catcontrol,
+      food
     },
     events: {
       'cart.add'(target) {
