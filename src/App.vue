@@ -12,24 +12,31 @@
         <a v-link="{path:'/seller'}">商家</a>
       </div>
     </div>
-    <router-view :seller="seller"></router-view>
+    <!-- 切换页面 页面依然保持之前的操作 优化项目-->
+    <router-view :seller="seller" keep-alive></router-view>
   </div>
 </template>
 
 <script>
   import header from 'components/header/header.vue';
+  import {urlParse} from 'common/js/util.js';
   const ERR_OK = 0;
   export default {
     data() {
       return {
-        seller: {}
+        seller: {
+          id: (() => {
+            let queryParam = urlParse();
+            return queryParam.id;
+          })()
+        }
       };
     },
     created() {
-      this.$http.get('/api/seller').then((response) => {
+      this.$http.get('/api/seller?id=' + this.seller.id).then((response) => {
         response = response.body;  // 在vue-resource 1.0中版本 .body属性表示数据data
         if (response.errno === ERR_OK) {
-          this.seller = response.data;
+          this.seller = Object.assign({}, this.seller, response.data);
         }
       });
     },
